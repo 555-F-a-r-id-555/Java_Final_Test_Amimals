@@ -63,3 +63,14 @@
 ### Диаграмма классов ---------------------------------->
 
 [![Java_Final_test_animals](https://i.ibb.co/yyHcYsP/uml-diagram-animals.png)](https://i.ibb.co/yyHcYsP/uml-diagram-animals.png "Animals")
+
+### SQL Диаграмма после ---------------------------------->
+
+    Выполнения пункта 10,11:
+    10. Удалив из таблицы верблюдов, т.к. верблюдов решили перевезти в другой
+    питомник на зимовку. Объединить таблицы лошади, и ослы в одну таблицу
+    11. Создать новую таблицу “молодые животные” в которую попадут все
+    животные старше 1 года, но младше 3 лет и в отдельном столбце с точностью
+    до месяца подсчитать возраст животных в новой таблице
+
+[![Java_Final_test_animals](https://i.ibb.co/PjdJ0RY/Human-Friends-Horse-And-Donkey-Combined-Animals-1-to-3-Years.png)](https://i.ibb.co/PjdJ0RY/Human-Friends-Horse-And-Donkey-Combined-Animals-1-to-3-Years.png "Animals")
