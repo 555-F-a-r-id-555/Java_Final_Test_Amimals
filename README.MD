@@ -60,7 +60,7 @@
 
 [![Java_Final_test_animals](https://i.ibb.co/ZJTkm65/JAVA-ANIMALS7-drawio.png)](https://i.ibb.co/ZJTkm65/JAVA-ANIMALS7-drawio.png "Animals")
 
-### SQL Диаграмма из DBeaver  ---------------------------------->
+### SQL Диаграмма из DBeaver в соответствии с 1NF  ---------------------------------->
 
 [![Java_Final_test_animals](https://i.ibb.co/pxKgzVD/Human-Friends.png)](https://i.ibb.co/pxKgzVD/Human-Friends.png "Animals")
 
@@ -78,3 +78,127 @@
     до месяца подсчитать возраст животных в новой таблице
 
 [![Java_Final_test_animals](https://i.ibb.co/PjdJ0RY/Human-Friends-Horse-And-Donkey-Combined-Animals-1-to-3-Years.png)](https://i.ibb.co/PjdJ0RY/Human-Friends-Horse-And-Donkey-Combined-Animals-1-to-3-Years.png "Animals")
+
+### Устанавливаю LAMP на Ubuntu ---------------------------------->
+
+    LAMP представляет собой набор серверных программ с открытым исходным кодом, который устанавливается на сервер как комплект софта, предназначенный для размещения веб-сайтов. Данная четырёхбуквенная аббревиатура обозначает, что:
+        •    в операционной системе семейства Linux (L)
+        •  I) разворачивается веб-сервер Apache (A)
+        •  III ) и устанавливается система управления базами данных MySQL (M)
+        •  II ) для создания веб-страниц на языке PHP (P).
+--------------------------------------------
+
+    I ) Установка Apache
+    1) sudo apt update
+    2) sudo apt install apache2
+
+    II ) Установка PHP
+    3) sudo apt install sudo apt install php-common php php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip    
+    4) php -v
+            
+    III ) Установка MySQL
+    5) sudo apt install mysql-server
+    6) mysql --version
+
+----------------------------------------------
+
+    IV) Установка phpMyAdmin
+    качаем phpmyadmin-> https://www.phpmyadmin.net/
+    перемещаем в папку  
+    7) sudo mv /home/fred3/Downloads/phpMyAdmin.zip /var/www/html
+    8) sudo unzip phpMyAdmin.zip
+    9) cd /var/www/html  # Перейти в директорию, где находится phpMyAdmin  
+    10) sudo mv phpMyAdmin-5.2.1-all-languages phpmyadmin # Переименовать phpMyAdmin в phpmyadmin
+
+    11) sudo apt install php-mysqli
+
+    12) sudo systemctl restart apache2
+    13) sudo nano /etc/php/8.1/apache2/php.ini
+    14) extension=mysqli.so # Найдите и раскомментируйте (если они закомментированы) строки, связанные с расширением mysqli 
+    15) sudo systemctl restart apache2
+
+    теперь, захожу через браузер в phpmyфвьшт для
+    взаимодействия с mysql
+    16) http://localhost/phpmyadmin/
+    и тут возникает проблема с входом, у рута нет пароля 
+
+---------------------------------------------
+
+    V) Настройка MySQL
+    17) sudo mysql
+
+    Для входа в phpMyAdmin при помощи root, необходимо изменить метод аутентификации: от использования плагина auth_socket на метод, использующий пароль. Для этого нужно перейдя в командную строку MySQL,ввести: 
+
+    18) mysql> SELECT user, authentication_string, plugin, host FROM mysql.user;
+    19) mysql> ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '123';
+    20) mysql> SELECT user,authentication_string, plugin, host FROM mysql.user;
+
+    теперь нужно проверить будет ли работать http://192.168.1.68/localhost на основном компе
+
+     192.168.68 - это ip VM(Virtual Machine) hostmane -I
+---------------------------------------------
+
+    Теперь нужно настроить подключение с основной машины к VM для работы в mysql через консоль , чтобы работало http://192.168.1.68:3306
+    Это нужно для подключения JDBC-драйвера в java к нашей БД на VM.
+    ----------------------------------------
+    VI) Настройка подключения Mysql часть-2
+
+    21) sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
+
+    В файле конфигурации БД /etc/mysql/mysql.conf.d/mysqld.cnf в блоке [mysqld] прописываем строчку bind-address = 0.0.0.0 
+    Здесь база данных будет слушать все ip адреса для удаленного подключения 
+
+    Проверяем, если есть строка, содержащая skip-networking, закомментируйте ее, добавив # в начале строки. (у меня этой строки не было)
+
+-------------------------------------------------
+
+    VII ) Настройка брандмауэра
+
+    22) Проверяем открыт или порт 3306 командой
+    nmap -p 3306 192.168.1.68
+    (,где 192.168.1.68 ip VM на которой настраиваем базу) 
+    23) sudo apt install nmap
+
+    В виртуальной машине  изначально используется iptables в качестве брандмауэра, приведенные ниже команды разрешат доступ с любого IP-адреса
+
+    24) sudo iptables -I INPUT 1 -p tcp --dport 3306 -j ACCEPT
+
+    Но это не безопасно, поэтому делаем команду с установкой конкретного ip с которого можно коннектится
+
+    25)   iptables -I INPUT 1 -s 192.168.1.65 -p tcp --dport 3306 -j ACCEPT
+
+    192.168.1.65 – ip основного компа, на котором установлена VM,
+    можно узнать через ipconfig в windows.
+    (этот ip может меняться после перезагрузки*)
+
+    Обратите внимание на присутствие в строке цифры 1, это означает что это разрешение встанет в начало таблицы iptables в блоке Chain INPUT
+
+    Проверить наличие строки можно командой
+
+    27) iptables -nL —line-numbers
+    --------------------------------------------
+    28) sudo mkdir -p /etc/iptables
+    29) sudo sh -c 'iptables-save > /etc/iptables/rules.v4'
+
+------------------------------------------------
+
+    VIII) Предоставляем доступ пользователю с основного компа к Mysql на VM
+
+    30) mysql -u root -p123
+    31) CREATE USER 'fred1'@'192.168.1.65' IDENTIFIED BY '123'; # правильно
+
+    CREATE USER 'ip64'@'192.168.1.64' IDENTIFIED BY '123';
+
+    32) GRANT ALL PRIVILEGES ON *.* TO 'fred1'@'192.168.1.65' WITH GRANT OPTION;
+
+    GRANT ALL PRIVILEGES ON *.* TO 'ip64'@'192.168.1.64' WITH GRANT OPTION;
+
+    33)exit
+    34) sudo systemctl restart mysql
+    35) sudo systemctl status mysql
+
+    36) mysql -h 192.168.1.68 -u fred1 -p123
+    37) mysql -h 192.168.1.68 -u ip64 -p123 (при повторном подключении изменился ip, поэтому я создал нового, на всякий случай)
+
+    ура, наконец все работает ;)
+    скриншоты в папке LAMP_MYSQL_PhpMyAdmin 
