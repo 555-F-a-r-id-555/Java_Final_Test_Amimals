@@ -56,11 +56,15 @@
 
 ------------------------------------------------
 
-### SQL Диаграмма ---------------------------------->
+### Итоговая диаграмма классов ---------------------------------->
+
+[![Java_Final_test_animals](https://i.ibb.co/ZJTkm65/JAVA-ANIMALS7-drawio.png)](https://i.ibb.co/ZJTkm65/JAVA-ANIMALS7-drawio.png "Animals")
+
+### SQL Диаграмма из DBeaver  ---------------------------------->
 
 [![Java_Final_test_animals](https://i.ibb.co/pxKgzVD/Human-Friends.png)](https://i.ibb.co/pxKgzVD/Human-Friends.png "Animals")
 
-### Диаграмма классов ---------------------------------->
+### Диаграмма классов из IntelliJ IDEA  ---------------------------------->
 
 [![Java_Final_test_animals](https://i.ibb.co/yyHcYsP/uml-diagram-animals.png)](https://i.ibb.co/yyHcYsP/uml-diagram-animals.png "Animals")
 
