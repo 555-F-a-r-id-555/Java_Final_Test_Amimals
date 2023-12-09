@@ -398,3 +398,101 @@
    В результате мы получаем:
 
 [![Java_Final_test_animals](https://i.ibb.co/ZVfKHyx/20.png)](https://i.ibb.co/ZVfKHyx/20.png "connection to Mysql")
+
+### Описание пунктов с 13 по 15
+
+    пытался разбить программу на уровни(слои):
+    I) data_access_layer
+    II) service_layer
+    III) model_layer 
+
+# ---------------------------------------------------------------------------
+
+    I) data_access_layer - отвечает за подключение к БД (mysql 8.0.35) на VM
+    включает следующие классы:
+    1) DatabaseConnectior - отвечает за подключение к БД , если она не существует, то будет создана 
+    private static final String URL = "jdbc:mysql://192.168.1.68:3306/";
+    private static final String USER = "ip64";
+    private static final String PASSWORD = "123";
+    private static String dbName = "Animal105";
+
+    Полный адрес URL+ dbName = "jdbc:mysql://192.168.1.68:3306/Animal105";
+
+    в связи стем , что нужно вначале создать БД использую использую такой URL
+    "jdbc:mysql://192.168.1.68:3306/"; , по этой причине создал перегрузку метода 
+    Connection getConnection()
+    первый вариант без параметра , второй с параметром заглущкой,"OK".
+
+    2) CreateDatabase - класс отвечающий за первое создание БД, подключение осуществляется с помощью метода из предыдущего класса DatabaseConnector.getConnection("OK")
+    Требование, нужно, чтобы значение  Animal105 , совподало с зн. из 
+    String dbName = "Animal105";
+    String sql = "CREATE DATABASE IF NOT EXISTS Animal105";
+    тогда все будет OK
+
+    3) CreateTables - из названия понятно, создает таблицы , в нашем случае Pets и PackAnimals
+
+    String createPetsTableSQL = "CREATE TABLE IF NOT EXISTS Pets (ID INT PRIMARY KEY AUTO_INCREMENT, Name VARCHAR(50), Type VARCHAR(50), BirthDate DATE, Commands VARCHAR(100))";
+    String createPackAnimalsTableSQL = "CREATE TABLE IF NOT EXISTS Pets (ID INT PRIMARY KEY AUTO_INCREMENT, Name VARCHAR(50), Type VARCHAR(50), BirthDate DATE, Commands VARCHAR(100))";
+
+    4) InsertData на данный момент этот класс не использую
+
+# ---------------------------------------------------------------------------
+
+    III) model_layer - этот уровень должен реализовать классы, повторять структуру таблицы, которая изображена выше , те релизует пункт 13 -Создать класс с Инкапсуляцией методов и наследованием по диаграмме.
+
+    интерфейс - Animals
+    этот интерфейс имлиментируется классыми: Pets и PackAnimals
+    эти классы наследуются: Pets - Dogs, Cats, Hamsters
+    PackAnimals- Horses,Camels,Donkeys.
+
+# ---------------------------------------------------------------------------
+
+    II) service_layer - логика приложения.
+    Этот слой связывает пользователя через интерфейс пользователя(в виде switch-case в main классе) с data_access_layer и c model_layer.
+
+    В пункте 14. Написать программу, имитирующую работу реестра домашних животных.
+    У меня есть небольшое отличие пользователь, после успешного создания БД может , через service_layer, может сразу взаимодействовать с БД, при этом данные его работы будут сохранять и записываться в БД , а не локально.Поэтому любой другой пользователь может увидет изменение, в ДБ, но не на локальном компе первого пользователя.
+    Все операции с БД осуществляется , через sql запросы.
+
+    14.1) Завести новое животное - это функцию выполняет class AddAnimalApp в связки с class DatabaseOperations и методом addAnimalToDatabase.
+    "INSERT INTO Pets (Name, Type, BirthDate, Commands) VALUES (?, ?, ?, ?)"
+    "INSERT INTO PackAnimals (Name, Type, BirthDate, Commands) VALUES (?, ?, ?, ?)"
+
+    14.2) определять животное в правильный класс - осуществляется в классе addAnimalToDatabase с помощью instanceof
+    animal instanceof Pets
+
+    14.3) увидеть список команд, которое выполняет животное - class ShowCommandsById
+    запрос : "SELECT Commands FROM " + tableName + " WHERE ID = ?"
+    Помимо этого класса есть еще - class ShowAll
+    a) "SELECT * FROM Pets"
+    b) "SELECT * FROM PackAnimals"
+
+    14.4) обучить животное новым командам - class LearnNewCommand
+    запрос: "UPDATE " + tableName + " SET Commands = CONCAT(Commands, ', ', ?) WHERE ID = ?"
+
+    14.5) Реализовать навигацию по меню - class Main
+    System.out.println("\u001B[34m*|****************************************************************************************************************|*");
+            System.out.println("*| Выберите команду:                                                                                              |*");
+            System.out.println("*| Вводить нужно лишь цифры 1,2,3,4,5,6.                                                                          |*");
+            System.out.println("*| Описание ниже:                                                                                                 |*");
+            System.out.println("*| 1 - Добавление нового животного - название класса addAnimalApp                                                 |*");
+            System.out.println("*| 2 - Показать список всех животных - название класса showAll                                                    |*");
+            System.out.println("*| 3 - Показать команды животного по его id - название класса showCommandsById                                    |*");
+            System.out.println("*| 4 - Обучить животное новым командам - название класса learnNewCommand                                          |*");
+            System.out.println("*| 5 - Подсчитать количество животных - название класса animalCounter                                             |*");
+            System.out.println("*| 6 - Вывести id, имя животного и возраст в порядке возрастания в каждой таблице - название класса getAgeAndSort |*");
+            System.out.println("*|                                                                                                                |*");
+            System.out.println("*|****************************************************************************************************************|*\u001B[0m\n");
+
+    Как видно из выше описанно все обращения к БД осуществяются с помощью sql запросов , с одной стороны хорошо, все хранится онлайн и другие пользоватили. могут принимать участия, но при этом это может замедлить работу БД, так-как локального хранения я не придосматрел, для оптиматизацмя процесса обмена данными с ДБ, есть что улудшать :)
+
+    15).Создайте класс Счетчик - class AnimalCounter
+    запрос: "SELECT COUNT(*) AS count FROM " + tableName;
+
+# ---------------------------------------------------------------------------------------------------------------------
+
+[![Java_Final_test_animals](https://i.ibb.co/P4QkjnW/29.png)](https://i.ibb.co/P4QkjnW/29.png "user interface in app")
+
+[![Java_Final_test_animals](https://i.ibb.co/BG6JH8f/31.png)](https://i.ibb.co/BG6JH8f/31.png "user interface in app")
+
+[![Java_Final_test_animals](https://i.ibb.co/WxX0R6D/33.png)](https://i.ibb.co/WxX0R6D/33.png "user interface in app")
