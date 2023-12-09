@@ -293,3 +293,108 @@
     56) history
 
 Скриншоты в папке LINUX
+
+### Выполнение пункта 7
+
+     В подключенном MySQL репозитории создать базу данных “Human
+    Friends”
+
+    Заходим в Windows PowerShell
+    1) ipconfig # проверяем не изменился ли ip основного компа
+    2) mysql -h 192.168.1.68 -u ip64 -p123 # подключаемся к репозиторию
+    3) mysql> show databases; -- просматриваем список БД
+    Подключение уже установлено.
+
+    Дальнейшие действия делать не обязательно, это для самопроверки.
+    Проверяем в браузере
+    4) http://192.168.1.68:3306/
+    тоже самое, только через phpMyAdmin
+    user:root
+    password:123
+    5)http://192.168.1.68/phpmyadmin/
+
+    теперь подключим DBeaver или Workbench(для проверки), для создания и редактирования БД 
+    6)URL: jdbc:mysql://192.168.1.68:3306/
+    user:ip64
+    password:123
+    В Свойствах драйвера, устанавливаем:
+    allowPublicKeyRetrieval: True (поумолчанию false)
+    Тестируем соединение. Все ОК
+
+    Для работы БД подключаем IntelliJ IDEA Ultimate, с помощью JDBC - драйвера
+    Драйвер скачается автоматически.
+
+    7) В разделе Databases (справа, верхний угол):
+    Name:@192.168.1.68
+    Host:192.168.1.68 Port:3306
+    User:ip64
+    Password:123
+    URL: jdbc:mysql://192.168.1.68:3306/
+    Test Connection MySql 8.0.35 
+    Apply->OK Соединение установлено.
+
+    8) нужно еще добавить запись в pom.xml:
+    <dependencies>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.26</version> <!-- Укажите актуальную версию -->
+        </dependency>
+    </dependencies>
+
+    Только после этого все будет работать корректно
+
+[![Java_Final_test_animals](https://i.ibb.co/WxF7Mgn/17.png)](https://i.ibb.co/WxF7Mgn/17.png "connection to Mysql")
+
+[![Java_Final_test_animals](https://i.ibb.co/Dz8TWxr/25.png)](https://i.ibb.co/Dz8TWxr/25.png "connection to Mysql")
+
+# ---------------------------------------
+
+    теперь создадим БД HumanFriends
+    9) -- Создание базы данных "HumanFriends"
+    CREATE DATABASE IF NOT EXISTS HumanFriends3;
+
+    остальные команды описаны в файле: 01_createNewDbAndTables.sql
+    который находится в папке mysql_commands
+
+### Выполнение пунктов c 8 по 12 включительно
+
+    1)Пункт 8 и 9 : 01_createNewDbAndTables.sql
+    При создании таблиц учитываем NF:
+    NF1 гласит: Все графы должны содержать только одно значение,
+    Для уникальных идентификаторов должен быть PRIMARY KEY (первичный ключ)
+    В таблице не должно быть повторяющихся столбцов
+
+    В связи с этим,список команд для каждго животного нужно вынести в отдельную таблицу и с помощью FOREIGN KEY (внешних ключей) их связать
+    При том будут 2 связывающии таблицы: Pets_Commands_Relationship и PackAnimals_Commands_Relationship. 
+
+    Пункт 10 (Удалив из таблицы верблюдов, т.к. верблюдов решили перевезти в другой
+    питомник на зимовку. Объединить таблицы лошади, и ослы в одну таблицу.):
+    2) 02_deleteCamelsAndCreateAnimals1to3years.sql
+    Удаление придется выполнять их нескольких таблиц: PackAnimals_Commands_Relationship и
+    PackAnimals
+    Заполнять будем с помощью SELECT и объединять UNION ALL.
+
+    Пункт 11 (Создать новую таблицу “молодые животные” в которую попадут все животные старше 1 года, но младше 3 лет и в отдельном столбце с точностью до месяца подсчитать возраст животных в новой таблице):
+    3) 02_deleteCamelsAndCreateAnimals1to3years.sql
+    Для заполнения таблицы Combined_Animals_1_to_3_Years , осуществим два запроса к таблицам Pets и PackAnimals
+    возраст вычислим вот так:
+    CONCAT(
+        FLOOR(DATEDIFF(NOW(), BirthDate) / 365), ' год ',
+        FLOOR((DATEDIFF(NOW(), BirthDate) % 365) / 30.44), ' месяцев ',
+        ROUND(DATEDIFF(NOW(), BirthDate) % 30.44), ' дней'
+    ) AS AgeDescription
+
+    Пункт 12( Объединить все таблицы в одну, при этом сохраняя поля, указывающие на прошлую принадлежность к старым таблицам.)
+    4) 03_combineAll.sql
+    До того как объединить таблицы: Pets и PackAnimals, нужно создать дополнительный столбец commands и в него добавить весь список коменд 
+    Объединяем в таблицу - Animals
+
+    и наконец, оставляем одну таблицу 
+    и удаляем все остальные (такого пункта нет):
+    5)04_deleteAll.sql
+    этого делать не обязательно,удаляем все лишние таблицы кроме Animals
+
+   В результате мы получаем:
+
+[![Java_Final_test_animals](https://i.ibb.co/ZVfKHyx/20.png)](https://i.ibb.co/ZVfKHyx/20.png "connection to Mysql")
