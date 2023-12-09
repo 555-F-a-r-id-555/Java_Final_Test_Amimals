@@ -10,9 +10,6 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-//        CreateDatabase createDatabase = new CreateDatabase();
-//        createDatabase.createNewDatabase();
-//        CreateTables.createTablesAndInsertData();
         CreateDatabase createDatabase = CreateDatabase.createNewDatabase();
         CreateTables.createTablesAndInsertData();
 

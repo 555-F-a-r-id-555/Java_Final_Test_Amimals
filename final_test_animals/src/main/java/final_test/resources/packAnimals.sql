@@ -1,5 +1,5 @@
-use Animal8;
+use Animal105;
 
-select * from Animal8.PackAnimals;
+select * from Animal105.PackAnimals;
 
 -- CREATE DATABASE IF NOT EXISTS Animal9;
