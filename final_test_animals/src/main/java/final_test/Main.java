@@ -1,15 +1,20 @@
 package final_test;
 
+import final_test.data_access_layer.DatabaseConnector;
 import final_test.service_layer.*;
 import final_test.data_access_layer.CreateTables;
 import final_test.data_access_layer.CreateDatabase;
 
+import java.sql.Connection;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-       CreateDatabase createDatabase = CreateDatabase.createNewDatabase();
-       CreateTables.createTablesAndInsertData();
+//        CreateDatabase createDatabase = new CreateDatabase();
+//        createDatabase.createNewDatabase();
+//        CreateTables.createTablesAndInsertData();
+        CreateDatabase createDatabase = CreateDatabase.createNewDatabase();
+        CreateTables.createTablesAndInsertData();
 
         System.out.println("\n\n");
         Scanner scanner = new Scanner(System.in);
@@ -37,7 +42,6 @@ public class Main {
             System.out.println("*| 6 - Вывести id, имя животного и возраст в порядке возрастания в каждой таблице - название класса getAgeAndSort |*");
             System.out.println("*|                                                                                                                |*");
             System.out.println("*|****************************************************************************************************************|*\u001B[0m\n");
-
 
 
             String input = scanner.nextLine();
