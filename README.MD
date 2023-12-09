@@ -56,7 +56,7 @@
 
 ------------------------------------------------
 
-### Итоговая диаграмма классов ---------------------------------->
+### Итоговая диаграмма классов, пункт 6 ---------------------------------->
 
 [![Java_Final_test_animals](https://i.ibb.co/ZJTkm65/JAVA-ANIMALS7-drawio.png)](https://i.ibb.co/ZJTkm65/JAVA-ANIMALS7-drawio.png "Animals")
 
@@ -70,7 +70,7 @@
 
 ### SQL Диаграмма после ---------------------------------->
 
-    Выполнения пункта 10,11:
+    Выполнение пунктов 10,11:
     10. Удалив из таблицы верблюдов, т.к. верблюдов решили перевезти в другой
     питомник на зимовку. Объединить таблицы лошади, и ослы в одну таблицу
     11. Создать новую таблицу “молодые животные” в которую попадут все
@@ -202,3 +202,94 @@
 
     ура, наконец все работает ;)
     скриншоты в папке LAMP_MYSQL_PhpMyAdmin 
+
+---------------------------------------
+
+### Выполнение пунктов c 1 по 5 включительно
+
+    1) clear
+    2) cat > Pets <<EOF
+        Dogs
+        Cats
+        Hamsters
+        EOF
+    3) pwd
+    4) cat > Pets.txt <<EOF
+        Dogs
+        Cats
+        Hamsters
+        EOF
+    5) cat > "Pack animals" <<EOF
+        Horses
+        Camels
+        Donkeys
+        EOF
+    6) cat > "Pack animals.txt" <<EOF
+        Horses
+        Camels
+        Donkeys
+        EOF
+    7) cat Pets "Pack animals" > All_animals
+    8)  cat All_animals
+    9)  cat Pets.txt "Pack animals.txt" > All_animals.txt
+    10)  cat All_animals.txt
+
+# -----------------------------------------------
+
+    11)  mv All_animals "Human Friends"
+    12)  mv All_animals.txt "Human Friends.txt"
+    13)  ls
+    14)  mkdir HumanFriends1
+    15)  mv "Human Friends" HumanFriends1/
+    16)  mkdir HumanFriends2
+    17)  mv "Human Friends.txt" HumanFriends2/
+    18)    ls
+    19)  ls HumanFriends1
+    20)  ls HumanFriends2
+    21)  uname -a
+    22)  sudo apt update
+    23)  sudo apt install software-properties-common
+    24)  sudo add-apt-repository 'deb <http://repo.mysql.com/apt/ubuntu/> 22.04 mysql-8.0'
+    25)  sudo apt update
+    26)  sudo apt install mysql-server
+    27)  mysql --version
+
+# -----------------------------
+
+    28) sudo apt --fix-broken install
+    29) wget <http://archive.ubuntu.com/ubuntu/pool/universe/h/htop/htop_2.2.0-1_amd64.deb>
+    30) sudo apt install wget
+    31) wget <http://archive.ubuntu.com/ubuntu/pool/main/n/nano/nano_5.8-1_amd64.deb>
+    32) wget <https://download.geany.org/geany-1.38.1/geany_1.38.1_amd64.deb>
+    33) sudo apt install ./teamviewer_amd64.deb
+    34) sudo apt install -f
+    35) systemctl status teamviewerd.service
+    36) teamviewer
+    37) sudo dpkg -i teamviewer_amd64.deb
+    38) sudo apt install ./teamviewer_amd64.deb
+
+# -------------------------------------------
+
+    39) sudo dpkg –i ./nginx_1.14.0-0ubuntu1.6_all.deb
+    40) wget <http://archive.ubuntu.com/ubuntu/pool/main/a/apache2/apache2_2.4.48-3+ubuntu18.04.1+deb.sury.org+1_amd64.deb>
+    41) wget <http://archive.ubuntu.com/ubuntu/pool/main/a/apache2/apache2-bin_2.4.52-1ubuntu4_amd64.deb>
+
+# ------------------------------------------
+
+    42) pwd
+    43) ls
+    44) sudo dpkg -i apache2-bin_2.4.52-1ubuntu4_amd64.deb
+    45) sudo apt-get update
+    46) sudo apt-get install -f
+    47) sudo dpkg -i apache2-bin_2.4.52-1ubuntu4_amd64.deb
+    48) sudo rm /var/lib/dpkg/lock-frontend
+    49) sudo rm /var/lib/dpkg/lock
+    50) sudo dpkg -i apache2-bin_2.4.52-1ubuntu4_amd64.deb
+    51) sudo systemctl status apache2
+    52) sudo dpkg -P apache2-bin_2.4.52-1ubuntu4_amd64.deb
+    53) sudo dpkg -P apache2-bin
+    54) dpkg -l | grep apache2-bin
+    55) dpkg -l
+    56) history
+
+Скриншоты в папке LINUX
